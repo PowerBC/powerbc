@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using powerbc.Domain;
 using powerbc.Services;
 using powerbc.Shares;
@@ -9,20 +11,20 @@ namespace powerbc.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private UserService userService;
-        private JwtHelper jwtHelper;
+        private UserService _userService;
+        private JwtHelper _jwtHelper;
 
         public UserController(UserService userService, JwtHelper jwtHelper)
         {
-            this.userService = userService;
-            this.jwtHelper = jwtHelper;
+            _userService = userService;
+            _jwtHelper = jwtHelper;
         }
 
         [HttpPost("signup")]
         public IActionResult SignUp(
             [FromBody] UserRegistrationBody userRegistrationBody)
         {
-            (int, string) verification = userService.VerifyRegistration(userRegistrationBody);
+            (int, string) verification = _userService.VerifyRegistration(userRegistrationBody);
 
             int code = verification.Item1;
             string message = verification.Item2;
@@ -33,7 +35,7 @@ namespace powerbc.Controllers
             }
             else
             {
-                userService.CreateUser(userRegistrationBody);
+                _userService.CreateUser(userRegistrationBody);
                 return Ok(message);
             }
         }
@@ -42,9 +44,7 @@ namespace powerbc.Controllers
         public ActionResult Login(
             [FromBody] UserAuthenticationBody userAuthenticationBody)
         {
-            (int, string) verification = userService.VerifyLogin(userAuthenticationBody);
-
-
+            (int, string) verification = _userService.VerifyLogin(userAuthenticationBody);
 
             int code = verification.Item1;
             string message = verification.Item2;
@@ -53,7 +53,7 @@ namespace powerbc.Controllers
                 return Ok(new Dictionary<string, string>()
                 {
                     {"message", message},
-                    {"token", jwtHelper.GenerateToken("123")},
+                    {"token", _jwtHelper.GenerateToken(userAuthenticationBody.Email)},
                 });
             }
             else
@@ -61,5 +61,24 @@ namespace powerbc.Controllers
                 return Unauthorized(message);
             }
         }
+
+        // 範例
+        [Authorize]
+        [HttpGet("email")]
+        public ActionResult GetEmail()
+        {
+            // User是ClaimPrincipal，Controller.Base的屬性
+            return Ok(User.IsInRole("Admin"));
+        }
+
+
+        // FIXME: naming
+        [Authorize]
+        [HttpGet("checkAuthentication")]
+        public ActionResult CheckAuthentucation()
+        {
+            return Ok();
+        }
+
     }
 }

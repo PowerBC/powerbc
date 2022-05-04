@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using powerbc.Domain;
 using powerbc.Services;
 using powerbc.Shares;
+using powerbc.Hubs;
 
 namespace powerbc.Controllers
 {
@@ -9,43 +13,88 @@ namespace powerbc.Controllers
     [ApiController]
     public class GroupController : ControllerBase
     {
+        private UserService _userService;
         private GroupService _groupService;
-        private JwtHelper _jwtHelper;
+        private readonly IHubContext<GroupServiceHub> _hubContext;
 
-        public GroupController(GroupService groupService, JwtHelper jwtHelper)
+        public GroupController(
+            GroupService groupService, 
+            UserService userService,
+            IHubContext<GroupServiceHub> hubContext)
         {
-            this._groupService = groupService;
-            this._jwtHelper = jwtHelper;
+            _userService = userService;
+            _groupService = groupService;
+            _hubContext = hubContext;
         }
 
+        [Authorize]
         [HttpPost("createGroup")]
-        public ActionResult CreateGroup([FromBody] (int, string) w)
+        public ActionResult CreateGroup([FromBody] GroupCreationBody body)
         {
+            // 用Email取得User參考，因為建立Group建立需要指定creator
+            User? creator = _userService.GetUserByEmail(User.Identity?.Name);
+            string name = body.Name;
+            string desc = body.Description;
+            _groupService.CreateGroup(creator, name, desc);
+
+
+            // 當系統新建立一個群組，由Server通知Client更新UI的Group清單
+            _hubContext.Clients.All.SendAsync("UpdateGroupList");
+
             return Ok();
         }
 
+        [Authorize]
         [HttpPost("createChannel")]
         public ActionResult CreateChannel([FromBody] (int, string) w)
         {
             return Ok();
         }
 
+        [Authorize]
         [HttpPost("addMember")]
         public ActionResult AddMember([FromBody] (int, string) w)
         {
             return Ok();
         }
 
-        [HttpPost("groupListOfUser")]
-        public ActionResult GetGroupListOfUser([FromBody] (int, string) w)
+        [Authorize]
+        [HttpGet("groupList")]
+        public ActionResult GetGroupListOfUser()
         {
-            return Ok();
+            User user = _userService.GetUserByEmail(User.Identity.Name);
+            return Ok(_groupService.GetGroupListOfUser(user));
         }
 
-        [HttpPost("sendMessage")]
-        public ActionResult SendMessage([FromBody] (int, string) w)
+        [Authorize]
+        [HttpGet("channelList/{groupId}")]
+        public ActionResult GetChannelList(string groupId)
         {
+            return Ok(_groupService.GetChannelListOfGroup(groupId));
+        }
+
+        [Authorize]
+        [HttpGet("messageList/{groupId}/{channelId}")]
+        public ActionResult GetMessageList(string groupId, string channelId)
+        {
+            return Ok(_groupService.GetMessageListOfChannel(groupId, channelId));
+        }
+
+        public record SendMessageBody(string GroupId, string ChannelId, string Message);
+        [Authorize]
+        [HttpPost("sendMessage")]
+        public ActionResult SendMessage([FromBody] SendMessageBody body)
+        {
+            string groupId = body.GroupId;
+            string channelId = body.ChannelId;
+            string message = body.Message;
+            _groupService.SendMessage(User.Identity.Name, groupId, channelId, message, _hubContext);
+
+            Console.WriteLine($"{groupId} {channelId}, {message}");
+
             return Ok();
         }
     }
+
+    public record GroupCreationBody(string Name, string Description);
 }

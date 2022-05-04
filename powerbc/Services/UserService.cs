@@ -16,6 +16,7 @@ namespace powerbc.Services
 
             userList.Add(new User(id, email, name, password));
 
+            // for debug
             Console.WriteLine("[CreateUser]");
             Console.WriteLine("Id\tEmail\tName\t");
             foreach (var user in userList)
@@ -65,7 +66,7 @@ namespace powerbc.Services
             return (code, message);
         }
 
-        private User? GetUserByEmail(string email)
+        public User GetUserByEmail(string email)
         {
             return userList.Find(user => user.Email == email);
         }

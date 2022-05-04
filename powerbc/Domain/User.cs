@@ -7,7 +7,6 @@
         public string Name { get; set; }
         public string Password { get; set; }
 
-
         public User(string id, string email, string name, string password)
         {
             Id = id;
@@ -15,7 +14,7 @@
             Name = name;
             Password = password;
         }
-
-        
     }
+
+    public record UserInfo(string Id, string Name);
 }

@@ -14,7 +14,7 @@ namespace powerbc.Shares
             this.Configuration = configuration;
         }
 
-        public string GenerateToken(string userName, int expireMinutes = 30)
+        public string GenerateToken(string userEmail, int expireMinutes = 3600)
         {
             var issuer = Configuration.GetValue<string>("JwtSettings:Issuer");
             var signKey = Configuration.GetValue<string>("JwtSettings:SignKey");
@@ -24,7 +24,7 @@ namespace powerbc.Shares
 
             // In RFC 7519 (Section#4), there are defined 7 built-in Claims, but we mostly use 2 of them.
             //claims.Add(new Claim(JwtRegisteredClaimNames.Iss, issuer));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, userName)); // User.Identity.Name
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, userEmail)); // User.Identity.Name
                                                                           //claims.Add(new Claim(JwtRegisteredClaimNames.Aud, "The Audience"));
                                                                           //claims.Add(new Claim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddMinutes(30).ToUnixTimeSeconds().ToString()));
                                                                           //claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())); // 必須為數字
@@ -38,8 +38,8 @@ namespace powerbc.Shares
             //claims.Add(new Claim(ClaimTypes.Name, userName));
 
             // TODO: You can define your "roles" to your Claims.
-            claims.Add(new Claim("roles", "Admin"));
-            claims.Add(new Claim("roles", "Users"));
+            // claims.Add(new Claim("roles", "Admin"));
+            claims.Add(new Claim("roles", "User"));
 
             var userClaimsIdentity = new ClaimsIdentity(claims);
 
