@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using powerbc.Hubs;
-
-namespace powerbc.Domain
+﻿namespace powerbc.Domain
 {
     public class Group
     {
@@ -10,13 +7,13 @@ namespace powerbc.Domain
         public string Name { get; set; }
         public string Description { get; set; } = "";
         
-        private List<User> _memberList = new();
+        private readonly List<User> _memberList = new();
         public List<User> MemberList
         {
             get => _memberList;
         }
 
-        private List<Channel> _channelList = new()
+        private readonly List<Channel> _channelList = new()
         {
             new Channel("0", "General"),
         };
@@ -59,11 +56,12 @@ namespace powerbc.Domain
             return _channelList.First(ch => ch.Id == channelId);
         }
 
-        public void SendMessage(User sender, string channelId, string message, IHubContext<GroupServiceHub> hubContext)
+        public void SaveMessage(Message message, string channelId)
         {
             Channel channel = GetChannelById(channelId);
-            channel.CreateMessage(sender, message, hubContext);
+            channel.SaveMessage(message);
         }
+
     }
 
     public record GroupInfo(

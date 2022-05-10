@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using powerbc.Hubs;
-
-namespace powerbc.Domain
+﻿namespace powerbc.Domain
 {
     public class Channel
     {
@@ -25,14 +22,9 @@ namespace powerbc.Domain
             Name = name;
         }
 
-        public void CreateMessage(User sender, string content, IHubContext<GroupServiceHub> hubContext)
+        public void SaveMessage(Message message)
         {
-            string id = _messageList.Count.ToString();
-            Message message = new Message(id, sender, content);
             _messageList.Add(message);
-
-            // Boardcast
-            hubContext.Clients.All.SendAsync("ReceiveMessage");
         }
     }
 

@@ -80,19 +80,29 @@ namespace powerbc.Controllers
             return Ok(_groupService.GetMessageListOfChannel(groupId, channelId));
         }
 
-        public record SendMessageBody(string GroupId, string ChannelId, string Message);
+        public record SendMessageBody(string GroupId, string ChannelId, string Content);
         [Authorize]
         [HttpPost("sendMessage")]
         public ActionResult SendMessage([FromBody] SendMessageBody body)
         {
             string groupId = body.GroupId;
             string channelId = body.ChannelId;
-            string message = body.Message;
-            _groupService.SendMessage(User.Identity.Name, groupId, channelId, message, _hubContext);
+            string content = body.Content;
 
-            Console.WriteLine($"{groupId} {channelId}, {message}");
+            User sender = _userService.GetUserByEmail(User.Identity.Name);
+
+            Message message = new(Guid.NewGuid().ToString() , sender, content);
+
+            _groupService.SendMessage(groupId, channelId, message);
+
+            Broadcast("ReceiveMessage");
 
             return Ok();
+        }
+
+        private void Broadcast(string method)
+        {
+            _hubContext.Clients.All.SendAsync(method);
         }
     }
 

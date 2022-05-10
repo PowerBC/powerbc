@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using powerbc.Domain;
-using powerbc.Hubs;
+﻿using powerbc.Domain;
 
 namespace powerbc.Services
 {
     public class GroupService
     {
-        private List<Group> _groupList = new();
+        private readonly List<Group> _groupList = new();
 
-        private Dictionary<User, HashSet<Group>> _memberships = new();
+        private readonly Dictionary<User, HashSet<Group>> _memberships = new();
 
         public void CreateGroup(User creator, string name, string desc)
         {
@@ -67,15 +65,12 @@ namespace powerbc.Services
         }
 
         public void SendMessage(
-            string email, 
-            string groupId,  
-            string channelId, 
-            string message, 
-            IHubContext<GroupServiceHub> hubContext)
+            string groupId,
+            string channelId,
+            Message message)
         {
             Group group = GetGroupById(groupId);
-            User sender = group.GetMemberByEmail(email);
-            group.SendMessage(sender, channelId, message, hubContext);
+            group.SaveMessage(message, channelId);
         }
     }
 }
