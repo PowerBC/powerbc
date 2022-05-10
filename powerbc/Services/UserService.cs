@@ -66,7 +66,7 @@ namespace powerbc.Services
             return (code, message);
         }
 
-        public User GetUserByEmail(string email)
+        public User? GetUserByEmail(string email)
         {
             return userList.Find(user => user.Email == email);
         }
