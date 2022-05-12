@@ -22,6 +22,8 @@
             get => _channelList;
         }
 
+        public string Invite = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("==", "");
+
         public GroupInfo Info
         {
             get => new(Id, Name, Description);

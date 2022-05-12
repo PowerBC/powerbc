@@ -104,6 +104,25 @@ namespace powerbc.Controllers
         {
             _hubContext.Clients.All.SendAsync(method);
         }
+
+        [Authorize]
+        [HttpGet("invite/{groupId}")]
+        public ActionResult GetInvite(string groupId)
+        {
+            return Ok(_groupService.GetGroupById(groupId).Invite);
+        }
+
+        public record JoinGroupBody(string InviteLink);
+        [Authorize]
+        [HttpPost("joinGroupByInvite")]
+        public ActionResult JoinGroupByInvite([FromBody] JoinGroupBody body)
+        {
+            string inviteLink = body.InviteLink;
+            User member = _userService.GetUserByEmail(User.Identity.Name);
+            _groupService.AddMemberByInvite(member, inviteLink);
+            Broadcast("UpdateGroupList");
+            return Ok();
+        }
     }
 
     public record GroupCreationBody(string Name, string Description);
