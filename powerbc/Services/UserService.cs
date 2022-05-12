@@ -15,16 +15,6 @@ namespace powerbc.Services
             string password = userRegistrationBody.Password;
 
             userList.Add(new User(id, email, name, password));
-
-            // for debug
-            Console.WriteLine("[CreateUser]");
-            Console.WriteLine("Id\tEmail\tName\t");
-            foreach (var user in userList)
-            {
-                Console.WriteLine($"{user.Id}\t{user.Email}\t{user.Name}");
-            }
-            Console.WriteLine("------------");
-
         }
 
         public (int, string) VerifyRegistration(
