@@ -62,23 +62,12 @@ namespace powerbc.Controllers
             }
         }
 
-        // 範例
         [Authorize]
-        [HttpGet("email")]
-        public ActionResult GetEmail()
+        [HttpGet("name")]
+        public ActionResult GetUsername()
         {
-            // User是ClaimPrincipal，Controller.Base的屬性
-            return Ok(User.IsInRole("Admin"));
+            User user = _userService.GetUserByEmail(User.Identity.Name);
+            return Ok(user.Name);
         }
-
-
-        // FIXME: naming
-        [Authorize]
-        [HttpGet("checkAuthentication")]
-        public ActionResult CheckAuthentucation()
-        {
-            return Ok();
-        }
-
     }
 }
