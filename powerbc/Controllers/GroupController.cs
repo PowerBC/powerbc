@@ -45,20 +45,6 @@ namespace powerbc.Controllers
         }
 
         [Authorize]
-        [HttpPost("createChannel")]
-        public ActionResult CreateChannel([FromBody] (int, string) w)
-        {
-            return Ok();
-        }
-
-        [Authorize]
-        [HttpPost("addMember")]
-        public ActionResult AddMember([FromBody] (int, string) w)
-        {
-            return Ok();
-        }
-
-        [Authorize]
         [HttpGet("groupList")]
         public ActionResult GetGroupListOfUser()
         {
