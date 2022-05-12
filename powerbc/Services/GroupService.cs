@@ -13,25 +13,7 @@ namespace powerbc.Services
             string id = _groupList.Count.ToString();
             Group newGroup = new (creator, id, name, desc);
             _groupList.Add(newGroup);
-            if (_memberships.ContainsKey(creator))
-            {
-                _memberships[creator].Add(newGroup);
-            }
-            else
-            {
-                _memberships.Add(creator, new() { newGroup });
-            }
-
-            // for debug
-            Console.WriteLine("[CreateGroup]");
-            Console.WriteLine("Id\tGroup\tDescription");
-            foreach (var group in _groupList)
-            {
-                Console.WriteLine($"{group.Id}\t{group.Name}\t{group.Description}");
-            }
-            Console.WriteLine("------------");
-
-
+            UpdateMembership(creator, newGroup);
         }
 
         public List<GroupInfo> GetGroupListOfUser(User user)
@@ -57,11 +39,35 @@ namespace powerbc.Services
             return _groupList.First(g => g.Id == groupId);
         }
 
+        public Group GetGroupByInvite(string inviteLink)
+        {
+            return _groupList.First(g => g.Invite == inviteLink);
+        }
+
         public List<Message> GetMessageListOfChannel(string groupId, string channelId)
         {
             Group group = GetGroupById(groupId);
             Channel channel = group.GetChannelById(channelId);
             return channel.MessageList;
+        }
+
+        public void AddMemberByInvite(User member, string inviteLink)
+        {
+            Group group = GetGroupByInvite(inviteLink);
+            group.AddMember(member);
+            UpdateMembership(member, group);
+        }
+
+        private void UpdateMembership(User member, Group group)
+        {
+            if (_memberships.ContainsKey(member))
+            {
+                _memberships[member].Add(group);
+            }
+            else
+            {
+                _memberships.Add(member, new() { group });
+            }
         }
 
         public void SendMessage(
