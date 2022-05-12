@@ -12,7 +12,7 @@ namespace powerbc.Tests
         {
             GroupService groupService = new GroupService();
 
-            User creator = new("0", "abc@xyz.com", "creator", "********");
+            User creator = new("abc@xyz.com", "creator", "********");
 
             groupService.CreateGroup(creator, "Group_0", "");
 
@@ -25,7 +25,7 @@ namespace powerbc.Tests
         {
             GroupService groupService = new GroupService();
 
-            User creator = new("0", "abc@xyz.com", "creator", "********");
+            User creator = new("abc@xyz.com", "creator", "********");
 
             groupService.CreateGroup(creator, "Group_0", "");
 
@@ -40,7 +40,7 @@ namespace powerbc.Tests
         {
             GroupService groupService = new GroupService();
 
-            User creator = new("0", "abc@xyz.com", "creator", "********");
+            User creator = new("abc@xyz.com", "creator", "********");
 
             groupService.CreateGroup(creator, "Group_0", "");
 
@@ -48,11 +48,10 @@ namespace powerbc.Tests
 
             string channelId = groupService.GetChannelListOfGroup(groupId)[0].id;
 
-            Message message = new("M1", creator, "content");
+            Message message = new(creator, "content");
             groupService.SendMessage(groupId, channelId, message);
 
             Assert.AreEqual(1, groupService.GetMessageListOfChannel(groupId, channelId).Count);
-            Assert.AreEqual("M1", groupService.GetMessageListOfChannel(groupId, channelId)[0].Id);
             Assert.AreEqual("content", groupService.GetMessageListOfChannel(groupId, channelId)[0].Content);
         }
     }

@@ -9,11 +9,11 @@ namespace powerbc.Tests
         [TestMethod]
         public void TestSaveMessage()
         {
-            Channel channel = new("0", "Chat");
+            Channel channel = new("Chat");
             
-            User sender = new("0", "abc@xyz.com", "sender", "********");
+            User sender = new("abc@xyz.com", "sender", "********");
             
-            Message message = new(System.Guid.NewGuid().ToString(), sender, "content");
+            Message message = new(sender, "content");
             
             channel.SaveMessage(message);
 

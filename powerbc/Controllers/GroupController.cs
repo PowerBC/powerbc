@@ -91,7 +91,7 @@ namespace powerbc.Controllers
 
             User sender = _userService.GetUserByEmail(User.Identity.Name);
 
-            Message message = new(Guid.NewGuid().ToString() , sender, content);
+            Message message = new(sender, content);
 
             _groupService.SendMessage(groupId, channelId, message);
 

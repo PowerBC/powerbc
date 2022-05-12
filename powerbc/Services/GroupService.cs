@@ -10,8 +10,7 @@ namespace powerbc.Services
 
         public void CreateGroup(User creator, string name, string desc)
         {
-            string id = _groupList.Count.ToString();
-            Group newGroup = new (creator, id, name, desc);
+            Group newGroup = new (creator, name, desc);
             _groupList.Add(newGroup);
             UpdateMembership(creator, newGroup);
         }

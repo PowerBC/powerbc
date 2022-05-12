@@ -10,8 +10,8 @@ namespace powerbc.Tests
         public void TestGetMemberByEmail()
         {
             string email = "abc@xyz.com";
-            User creator = new User("0", "abc@xyz.com", "Jeff", "*******");
-            Group group = new Group(creator, "0", "Group0", "");
+            User creator = new User("abc@xyz.com", "Jeff", "*******");
+            Group group = new Group(creator, "Group0", "");
 
             Assert.AreEqual(creator, group.GetMemberByEmail(email));
         }
@@ -19,8 +19,8 @@ namespace powerbc.Tests
         [TestMethod]
         public void TestDefaultChannel()
         {
-            User creator = new User("0", "abc@xyz.com", "Jeff", "*******");
-            Group group = new Group(creator, "0", "Group0", "");
+            User creator = new User("abc@xyz.com", "Jeff", "*******");
+            Group group = new Group(creator, "Group0", "");
 
             Assert.AreEqual(1, group.ChannelList.Count);
 
@@ -31,8 +31,8 @@ namespace powerbc.Tests
         [TestMethod]
         public void TestGetCreateChannel()
         {
-            User creator = new User("0", "abc@xyz.com", "Jeff", "*******");
-            Group group = new Group(creator, "0", "Group0", "");
+            User creator = new User("abc@xyz.com", "Jeff", "*******");
+            Group group = new Group(creator, "Group0", "");
 
             group.CreateChannel("Gaming");
 
@@ -43,19 +43,17 @@ namespace powerbc.Tests
         [TestMethod]
         public void TestSaveMessage_1()
         {
-            User user = new("0", "abc@xyz.com", "sender", "********");
+            User user = new("abc@xyz.com", "sender", "********");
             
-            Group group = new(user, "0", "Group", "");
+            Group group = new(user, "Group", "");
             group.CreateChannel("Channel_0");
 
-            string msgId = System.Guid.NewGuid().ToString();
-            Message message = new(msgId, user, "content");
+            Message message = new(user, "content");
 
             group.SaveMessage(message, group.ChannelList[0].Id);
 
 
             Assert.AreEqual(message, group.ChannelList[0].MessageList[0]);
-            Assert.AreEqual(msgId, group.ChannelList[0].MessageList[0].Id);
             Assert.AreEqual("content", group.ChannelList[0].MessageList[0].Content);
         }
     }

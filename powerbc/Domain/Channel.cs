@@ -2,7 +2,7 @@
 {
     public class Channel
     {
-        public string Id { get; init; }
+        public string Id { get; } = Guid.NewGuid().ToString();
         public string Name { get; set; }
 
         public ChannelInfo Info 
@@ -16,9 +16,8 @@
             get => _messageList;
         }
 
-        public Channel(string id, string name)
+        public Channel(string name)
         {
-            Id = id;
             Name = name;
         }
 

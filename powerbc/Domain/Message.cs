@@ -2,7 +2,7 @@
 {
     public class Message
     {
-        public string Id { get; init; }
+        public string Id { get; } = Guid.NewGuid().ToString();
 
         public User Sender { get; init; }
 
@@ -25,9 +25,8 @@
             get => _time;
         }
 
-        public Message(string Id, User sender, string content)
+        public Message(User sender, string content)
         {
-            this.Id = Id;
             _content = content;
             Sender = sender;
         }

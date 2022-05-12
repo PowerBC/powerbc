@@ -9,12 +9,11 @@ namespace powerbc.Services
         public void CreateUser(
             UserRegistrationBody userRegistrationBody)
         {
-            string id = userList.Count.ToString();
             string email = userRegistrationBody.Email;
             string name = userRegistrationBody.Name;
             string password = userRegistrationBody.Password;
 
-            userList.Add(new User(id, email, name, password));
+            userList.Add(new User(email, name, password));
         }
 
         public (int, string) VerifyRegistration(

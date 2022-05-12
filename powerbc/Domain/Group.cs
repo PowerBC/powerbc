@@ -2,7 +2,7 @@
 {
     public class Group
     {
-        public string Id { get; init; }
+        public string Id { get; } = Guid.NewGuid().ToString();
 
         public string Name { get; set; }
         public string Description { get; set; } = "";
@@ -15,7 +15,7 @@
 
         private readonly List<Channel> _channelList = new()
         {
-            new Channel("0", "General"),
+            new Channel("General"),
         };
         public List<Channel> ChannelList
         { 
@@ -29,9 +29,8 @@
             get => new(Id, Name, Description);
         }
 
-        public Group(User creator, string id, string name, string desc)
+        public Group(User creator, string name, string desc)
         {
-            Id = id;
             Name = name;
             Description = desc;
             _memberList.Add(creator);
@@ -39,8 +38,7 @@
 
         public void CreateChannel(string name)
         {
-            string id = _channelList.Count.ToString();
-            _channelList.Add(new Channel(id, name));
+            _channelList.Add(new Channel(name));
         }
 
         public void AddMember(User member)
