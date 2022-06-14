@@ -46,14 +46,14 @@
             _memberList.Add(member);
         }
 
-        public User GetMemberByEmail(string email)
+        public User? GetMemberByEmail(string email)
         {
-            return _memberList.First(m => m.Email == email);
+            return _memberList.Find(m => m.Email == email);
         }
 
-        public Channel GetChannelById(string channelId)
+        public Channel? GetChannelById(string channelId)
         {
-            return _channelList.First(ch => ch.Id == channelId);
+            return _channelList.Find(ch => ch.Id == channelId);
         }
 
         public void SaveMessage(Message message, string channelId)
@@ -61,7 +61,6 @@
             Channel channel = GetChannelById(channelId);
             channel.SaveMessage(message);
         }
-
     }
 
     public record GroupInfo(
