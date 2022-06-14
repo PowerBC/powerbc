@@ -17,6 +17,17 @@ namespace powerbc.Tests
         }
 
         [TestMethod]
+        public void TestGetMemberByEmail_NotFound()
+        {
+            string email = "abc@xyz.com";
+            User creator = new User(email, "Jeff", "*******");
+            Group group = new Group(creator, "Group0", "");
+
+            Assert.AreEqual(null, group.GetMemberByEmail("abc@xyz.coM"));
+            Assert.AreNotEqual(creator, group.GetMemberByEmail("abc@xyz.coM"));
+        }
+
+        [TestMethod]
         public void TestDefaultChannel()
         {
             User creator = new User("abc@xyz.com", "Jeff", "*******");
@@ -41,7 +52,7 @@ namespace powerbc.Tests
         }
 
         [TestMethod]
-        public void TestSaveMessage_1()
+        public void TestSaveMessage()
         {
             User user = new("abc@xyz.com", "sender", "********");
             
@@ -56,5 +67,58 @@ namespace powerbc.Tests
             Assert.AreEqual(message, group.ChannelList[0].MessageList[0]);
             Assert.AreEqual("content", group.ChannelList[0].MessageList[0].Content);
         }
+
+        [TestMethod]
+        public void TestGetChannelById_NotFound()
+        {
+            User creator = new User("abc@xyz.com", "Jeff", "*******");
+            Group group = new Group(creator, "Group0", "");
+            group.CreateChannel("Channel01");
+            
+            Assert.AreEqual(null, group.GetChannelById("123"));
+            Assert.AreEqual(null, group.GetChannelById(""));
+            Assert.AreEqual(null, group.GetChannelById("ds/df,gfd"));
+        }
+
+        [TestMethod]
+        public void TestGetChannelById_Found()
+        {
+            User creator = new User("abc@xyz.com", "Jeff", "*******");
+            Group group = new Group(creator, "Group0", "");
+            group.CreateChannel("Channel01");
+
+            string channelId = group.ChannelList[0].Id;
+
+            Assert.AreNotEqual(null, group.GetChannelById(channelId));
+        }
+
+        [TestMethod]
+        public void TestAddMember()
+        {
+            User creator = new User("abc@xyz.com", "Jeff", "*******");
+            Group group = new Group(creator, "Group0", "");
+            group.CreateChannel("Channel01");
+
+            Assert.AreEqual(1, group.MemberList.Count);
+
+            group.AddMember(new User("poi@xyz.com", "Joe", "*******"));
+
+            Assert.AreEqual(2, group.MemberList.Count);
+        }
+
+        [TestMethod]
+        public void TestCreateChannel()
+        {
+            User creator = new User("abc@xyz.com", "Jeff", "*******");
+            Group group = new Group(creator, "Group0", "");
+
+            Assert.AreEqual(1, group.ChannelList.Count);
+
+            group.CreateChannel("Channel0");
+
+            Assert.AreEqual(2, group.ChannelList.Count);
+        }
+
+
     }
 }
