@@ -29,18 +29,18 @@ namespace powerbc.Services
 
         public List<ChannelInfo> GetChannelListOfGroup(string groupId)
         {
-            var group = _groupList.First(g => groupId.Equals(groupId));
+            var group = GetGroupById(groupId);
             return group.ChannelList.Select(ch => ch.Info).ToList();
         }
 
-        public Group GetGroupById(string groupId)
+        public Group? GetGroupById(string groupId)
         {
-            return _groupList.First(g => g.Id == groupId);
+            return _groupList.Find(g => g.Id == groupId);
         }
 
-        public Group GetGroupByInvite(string inviteLink)
+        public Group? GetGroupByInvite(string inviteLink)
         {
-            return _groupList.First(g => g.Invite == inviteLink);
+            return _groupList.Find(g => g.Invite == inviteLink);
         }
 
         public List<Message> GetMessageListOfChannel(string groupId, string channelId)
