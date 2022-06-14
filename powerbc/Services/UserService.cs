@@ -1,5 +1,6 @@
 ﻿using powerbc.Domain;
 
+
 namespace powerbc.Services
 {
     public class UserService
@@ -36,7 +37,8 @@ namespace powerbc.Services
 
         }
 
-        public (int, string) VerifyLogin(
+        public record VerifyLoginResult(int code, string message);
+        public VerifyLoginResult VerifyLogin(
             UserAuthenticationBody userAuthenticationBody)
         {
             int code;
@@ -52,7 +54,7 @@ namespace powerbc.Services
                 message = "The email or the password is incorrect.";
             }
 
-            return (code, message);
+            return new(code, message);
         }
 
         public User? GetUserByEmail(string email)
