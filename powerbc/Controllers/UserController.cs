@@ -44,10 +44,10 @@ namespace powerbc.Controllers
         public ActionResult Login(
             [FromBody] UserAuthenticationBody userAuthenticationBody)
         {
-            (int, string) verification = _userService.VerifyLogin(userAuthenticationBody);
+            UserService.VerifyLoginResult verification = _userService.VerifyLogin(userAuthenticationBody);
 
-            int code = verification.Item1;
-            string message = verification.Item2;
+            int code = verification.code;
+            string message = verification.message;
             if (code == 200)
             {
                 return Ok(new Dictionary<string, string>()
