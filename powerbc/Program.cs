@@ -31,6 +31,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSingleton<powerbc.Services.UserService>();
 builder.Services.AddSingleton<powerbc.Services.GroupService>();
+builder.Services.AddSingleton<powerbc.Services.ChatService>();
 
 builder.Services.AddSingleton<powerbc.Shares.JwtHelper>();
 
