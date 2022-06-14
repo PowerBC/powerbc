@@ -20,5 +20,13 @@ namespace powerbc.Services
         {
             _chatRoomList.Add(chatRoom);
         }
+
+        public void SendMessage(
+            string chatRoomId,
+            Message message)
+        {
+            ChatRoom chatRoom = GetChatRoomByChatRoomId(chatRoomId);
+            chatRoom.SaveMessage(message);
+        }
     }
 }

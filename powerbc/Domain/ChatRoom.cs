@@ -16,5 +16,10 @@
         public List<Message> Messages { get => _messages; }
 
         public List<MessageInfo> Info { get { return _messages.Select(m => m.Info).ToList(); } }
+
+        public void SaveMessage(Message message)
+        {
+            _messages.Add(message);
+        }
     }
 }

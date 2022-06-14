@@ -127,5 +127,22 @@ namespace powerbc.Controllers
 
             return Ok(chatRoom.Info);
         }
+
+        public record ChatMessageBody(string ChatRoomId, string Content);
+        [Authorize]
+        [HttpPost("sendMessage")]
+        public ActionResult SendMessage([FromBody] ChatMessageBody body)
+        {
+            string chatRoomId = body.ChatRoomId;
+            string content = body.Content;
+
+            User sender = _userService.GetUserByEmail(User.Identity.Name);
+
+            Message message = new(sender, content);
+
+            _chatService.SendMessage(chatRoomId, message);
+
+            return Ok();
+        }
     }
 }
