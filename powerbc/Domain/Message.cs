@@ -30,5 +30,16 @@
             _content = content;
             Sender = sender;
         }
+
+        public MessageInfo Info
+        {
+            get => new(Id, _time, Sender.Name, Content);
+        }
     }
+    public record MessageInfo(
+        string Id,
+        DateTime Time,
+        string SenderName,
+        string Content
+    );
 }

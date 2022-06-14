@@ -62,9 +62,13 @@ namespace powerbc.Services
             return userList.Find(user => user.Email == email);
         }
 
+        public User? GetUserById(string userId)
+        {
+            return userList.Find(user => user.Id == userId);
+        }
+
         private bool IsEmailRegistered(string email)
         {
-            
             return GetUserByEmail(email) != null;
         } 
 
