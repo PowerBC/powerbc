@@ -22,7 +22,7 @@ namespace powerbc.Tests
         }
 
         [TestMethod]
-        public void TestVerifyRegistration()
+        public void TestVerifyRegistration_Failed_1()
         {
             UserRegistrationBody body = new()
             {
@@ -41,7 +41,31 @@ namespace powerbc.Tests
         }
 
         [TestMethod]
-        public void TestVerifyLogin_1()
+        public void TestVerifyRegistration_Success_1()
+        {
+            UserRegistrationBody body = new()
+            {
+                Name = "Joe",
+                Email = "joe@abc.co.jp",
+                Password = "*******"
+            };
+
+            UserService userService = new();
+
+            Assert.AreEqual((200, "Success."), userService.VerifyRegistration(body));
+
+            UserRegistrationBody body2 = new()
+            {
+                Name = "Joe",
+                Email = "joE@abc.co.jp",
+                Password = "*******"
+            };
+
+            Assert.AreEqual((200, "Success."), userService.VerifyRegistration(body2));
+        }
+
+        [TestMethod]
+        public void TestVerifyLogin_Failed_1()
         {
             UserRegistrationBody body = new()
             {
@@ -59,12 +83,12 @@ namespace powerbc.Tests
             };
 
             Assert.AreEqual(
-                (401, "The email or the password is incorrect."),
+                new UserService.VerifyLoginResult(401, "The email or the password is incorrect."),
                 userService.VerifyLogin(authBody1));
         }
 
         [TestMethod]
-        public void TestVerifyLogin_2()
+        public void TestVerifyLogin_Failed_2()
         {
             UserRegistrationBody body = new()
             {
@@ -82,12 +106,12 @@ namespace powerbc.Tests
             };
 
             Assert.AreEqual(
-                (401, "The email or the password is incorrect."),
+                new UserService.VerifyLoginResult(401, "The email or the password is incorrect."),
                 userService.VerifyLogin(authBody2));
         }
 
         [TestMethod]
-        public void TestVerifyLogin_3()
+        public void TestVerifyLogin_Sucess_3()
         {
             UserRegistrationBody body = new()
             {
@@ -105,7 +129,7 @@ namespace powerbc.Tests
             };
 
             Assert.AreEqual(
-                (200, "Success."),
+                new UserService.VerifyLoginResult(200, "Success."),
                 userService.VerifyLogin(authBody));
         }
     }
